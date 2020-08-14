@@ -44,7 +44,8 @@ io.sockets.on('connection', function (socket) {
     });
 
     subMVML.on('message', function (msg) {
-        let msgrun = JSON.parse(msg)
-        io.sockets.emit('msg',msgrun);
+        console.log(msg);
+        //let msgrun = JSON.parse(msg)
+        //io.sockets.emit('msg',msgrun);
     });
 });
