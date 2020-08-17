@@ -1,7 +1,7 @@
-var app = require('express')(),
-    server = require('http').createServer(app),
-    io = require('socket.io').listen(server),
-    zmq = require("zeromq/v5-compat");
+const app = require('express')();
+const server = require('http').createServer(app);
+const io = require('socket.io').listen(server);
+const zmq = require("zeromq/v5-compat");
 
 var subMVML = zmq.socket('sub');
 var pubCMD = zmq.socket('pub');
@@ -13,14 +13,14 @@ subMVML.connect('tcp://' + IP + ':3000');
 subMVML.subscribe('');
 pubCMD.connect('tcp://' + IP + ':2000');
 
-server.listen(8080);
+server.listen(8080, () => {
+    console.log('Listening on localhost:8080')
+})
 
 // Routing
 app.get('/', function (req, res) {
     res.sendFile(__dirname + '/html/index.html');
-    setTimeout(function () {
-        io.sockets.emit('connecte');
-    }, 500);
+    console.log('get root')
 });
 
 function appGet(chemin) {
@@ -44,8 +44,7 @@ io.sockets.on('connection', function (socket) {
     });
 
     subMVML.on('message', function (msg) {
-        console.log(msg);
-        //let msgrun = JSON.parse(msg)
-        //io.sockets.emit('msg',msgrun);
+        let msgrun = JSON.parse(msg)
+        io.sockets.emit('msg',msgrun);
     });
 });
